@@ -1,15 +1,24 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const express = require("express");
+const cors = require("cors");
 
 // Variáveis utilitárias
 const db = admin.firestore();
 const logger = functions.logger;
+const app = express();
 
-exports.createUser = functions.https.onRequest(async (req, res) => {
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true }));
+
+app.get("/hello", (req, res) => {
+  res.end("Received GET request!");
+});
+
+app.post("/", async (req, res) => {
   logger.info("Iniciando criação de usuário");
 
   const {
-    uid,
     name,
     birthday,
     email,
@@ -39,7 +48,7 @@ exports.createUser = functions.https.onRequest(async (req, res) => {
 
   logger.info("Inserindo usuário no firestore");
 
-  await db.collection("users").doc(uid).set({
+  const writeResult = await db.collection("users").add({
     name,
     birthday,
     email,
@@ -67,6 +76,8 @@ exports.createUser = functions.https.onRequest(async (req, res) => {
     image,
   });
 
-  logger.info(`Usuário inserido com id ${uid}`);
-  res.status(201).json({ result: `Usuário inserido com id ${uid}` });
+  logger.info(`Usuário inserido com id ${writeResult.id}`);
+  res.status(201).json({ result: `Usuário inserido com id ${writeResult.id}` });
 });
+
+exports.users = functions.https.onRequest(app);
