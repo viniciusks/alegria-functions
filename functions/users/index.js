@@ -19,6 +19,7 @@ app.post("/", async (req, res) => {
   logger.info("Iniciando criação de usuário");
 
   const {
+    uid,
     name,
     birthday,
     email,
@@ -48,7 +49,7 @@ app.post("/", async (req, res) => {
 
   logger.info("Inserindo usuário no firestore");
 
-  const writeResult = await db.collection("users").add({
+  await db.collection("users").doc(uid).set({
     name,
     birthday,
     email,
@@ -76,8 +77,8 @@ app.post("/", async (req, res) => {
     image,
   });
 
-  logger.info(`Usuário inserido com id ${writeResult.id}`);
-  res.status(201).json({ result: `Usuário inserido com id ${writeResult.id}` });
+  logger.info(`Usuário inserido com id ${uid}`);
+  res.status(201).json({ result: `Usuário inserido com id ${uid}` });
 });
 
 exports.users = functions.https.onRequest(app);
