@@ -11,8 +11,31 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 
-app.get("/hello", (req, res) => {
-  res.end("Received GET request!");
+app.get("/:uid", (req, res) => {
+  let uid = req.params.uid;
+
+  logger.info(`Iniciando busca por usuário com uid ${uid}`);
+
+  db.collection("users")
+    .doc(uid)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        let msg = `User founded with uid ${uid}`;
+        logger.info(msg);
+        res.status(200).json({
+          message: msg,
+          data: doc.data(),
+        });
+      } else {
+        let msg = `User NOT founded with uid ${uid}`;
+        logger.error(msg);
+        res.status(404).json({
+          message: msg,
+          data: [],
+        });
+      }
+    });
 });
 
 app.post("/", async (req, res) => {
@@ -78,7 +101,7 @@ app.post("/", async (req, res) => {
   });
 
   logger.info(`Usuário inserido com id ${uid}`);
-  res.status(201).json({ result: `Usuário inserido com id ${uid}` });
+  res.status(201).json({ message: `Usuário inserido com id ${uid}`, data: [] });
 });
 
 exports.users = functions.https.onRequest(app);
