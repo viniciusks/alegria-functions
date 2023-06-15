@@ -91,7 +91,48 @@ app.post("/", async (req, res) => {
 
   logger.info("Inserindo usuário no firestore");
 
-  await db.collection("users").doc(uid).set({
+  await db
+    .collection("users")
+    .doc(uid)
+    .set({
+      name,
+      birthday,
+      email,
+      country,
+      state,
+      roles,
+      action,
+      artisticFormation,
+      professionalArt,
+      englishLevel,
+      spanishLevel,
+      spiritCenter,
+      otherLanguages,
+      whatsapp,
+      isWorker,
+      isPlayer,
+      isTheater,
+      isLiterature,
+      isDancer,
+      isEFASCoordinator,
+      isCONCAFRASCoordinator,
+      isVisualArt,
+      isActive,
+      instruments,
+      image,
+    })
+    .then(() => {
+      logger.info(`Usuário inserido com id ${uid}`);
+      res
+        .status(201)
+        .json({ message: `Usuário inserido com id ${uid}`, data: [] });
+    });
+});
+
+app.put("/:id", async (req, res) => {
+  logger.info("Iniciando atualização de usuário");
+  let id = req.params.id;
+  const {
     name,
     birthday,
     email,
@@ -117,10 +158,77 @@ app.post("/", async (req, res) => {
     isActive,
     instruments,
     image,
-  });
+  } = req.body;
 
-  logger.info(`Usuário inserido com id ${uid}`);
-  res.status(201).json({ message: `Usuário inserido com id ${uid}`, data: [] });
+  await db
+    .collection("users")
+    .doc(id)
+    .set({
+      name,
+      birthday,
+      email,
+      country,
+      state,
+      roles,
+      action,
+      artisticFormation,
+      professionalArt,
+      englishLevel,
+      spanishLevel,
+      spiritCenter,
+      otherLanguages,
+      whatsapp,
+      isWorker,
+      isPlayer,
+      isTheater,
+      isLiterature,
+      isDancer,
+      isEFASCoordinator,
+      isCONCAFRASCoordinator,
+      isVisualArt,
+      isActive,
+      instruments,
+      image,
+    })
+    .then(() => {
+      let msg = `Usuário de id ${id} atualizado com sucesso!`;
+      logger.info(msg);
+      res.status(200).json({
+        message: msg,
+        data: [],
+      });
+    })
+    .catch((error) => {
+      logger.error(error);
+      res.status(400).json({
+        message: error,
+        data: [],
+      });
+    });
+});
+
+app.delete("/:id", async (req, res) => {
+  let id = req.params.id;
+
+  await db
+    .collection("users")
+    .doc(id)
+    .delete()
+    .then(() => {
+      let msg = `Usuário de id ${id} deletado com sucesso!`;
+      logger.info(msg);
+      res.status(200).json({
+        message: msg,
+        data: [],
+      });
+    })
+    .catch((error) => {
+      logger.error(error);
+      res.status(400).json({
+        message: error,
+        data: [],
+      });
+    });
 });
 
 exports.users = functions.https.onRequest(app);
