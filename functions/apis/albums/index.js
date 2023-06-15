@@ -77,4 +77,59 @@ app.post("/", async (req, res) => {
     });
 });
 
+app.put("/:id", async (req, res) => {
+  logger.info("Iniciando atualização de álbum");
+  let id = req.params.id;
+  const { name, owner, musics, link } = req.body;
+
+  await db
+    .collection("albums")
+    .doc(id)
+    .set({
+      name,
+      owner,
+      musics,
+      link,
+    })
+    .then(() => {
+      let msg = `Álbum de id ${id} atualizado com sucesso!`;
+      logger.info(msg);
+      res.status(200).json({
+        message: msg,
+        data: [],
+      });
+    })
+    .catch((error) => {
+      logger.error(error);
+      res.status(400).json({
+        message: error,
+        data: [],
+      });
+    });
+});
+
+app.delete("/:id", async (req, res) => {
+  let id = req.params.id;
+
+  await db
+    .collection("albums")
+    .doc(id)
+    .delete()
+    .then((deleteResponse) => {
+      let msg = `Álbum de id ${id} deletado com sucesso!`;
+      logger.info(msg);
+      res.status(200).json({
+        message: msg,
+        data: [],
+      });
+    })
+    .catch((error) => {
+      logger.error(error);
+      res.status(400).json({
+        message: error,
+        data: [],
+      });
+    });
+});
+
 exports.albums = functions.https.onRequest(app);
