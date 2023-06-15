@@ -20,7 +20,11 @@ app.get("/", async (req, res) => {
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
-        albums.push(doc.data());
+        let album = {
+          id: doc.id,
+          album: doc.data(),
+        };
+        albums.push(album);
       });
     });
 
