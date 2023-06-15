@@ -11,6 +11,25 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 
+app.get("/", async (req, res) => {
+  let users = [];
+
+  await db
+    .collection("users")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        users.push(doc.data());
+      });
+    });
+
+  res.status(200).json({
+    message: "Usuários selecionados com sucesso!",
+    data: users,
+  });
+});
+
 app.get("/:uid", (req, res) => {
   let uid = req.params.uid;
 
