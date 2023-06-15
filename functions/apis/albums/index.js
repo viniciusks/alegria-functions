@@ -115,7 +115,7 @@ app.delete("/:id", async (req, res) => {
     .collection("albums")
     .doc(id)
     .delete()
-    .then((deleteResponse) => {
+    .then(() => {
       let msg = `Álbum de id ${id} deletado com sucesso!`;
       logger.info(msg);
       res.status(200).json({
