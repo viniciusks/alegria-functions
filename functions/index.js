@@ -5,8 +5,10 @@ admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 const usersApi = require("./apis/users");
 const albumsApi = require("./apis/albums");
+const filesApi = require("./apis/files");
 
 module.exports = {
   ...usersApi,
   ...albumsApi,
+  ...filesApi,
 };
