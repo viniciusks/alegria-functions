@@ -16,17 +16,19 @@ app.post("/", (req, res) => {
   const body = req.body;
   const bucket = admin.storage().bucket();
 
+  console.log(body);
+
   body.files.forEach((file) => {
-    let typeFile = file.type.includes("x-zip") ? "application/zip" : file.type;
-    let sizeBuffer = Buffer.from(file.size, "base64");
+    console.log(file);
+    let sizeBuffer = Buffer.from(new ArrayBuffer(file.size));
     let sizeByteArray = new Uint8Array(sizeBuffer);
     let newFile = bucket.file(`${body.path}/${file.name}`);
     let options = {
       resumable: false,
-      metadata: { contentType: typeFile },
+      metadata: { contentType: file.type },
     };
-
-    newFile.save(sizeByteArray, options);
+    console.log(sizeBuffer);
+    newFile.save(sizeBuffer, options);
   });
 
   res.status(201).json({
