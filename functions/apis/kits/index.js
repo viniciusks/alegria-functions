@@ -55,11 +55,11 @@ app.get("/:id", (req, res) => {
 
 app.post("/", async (req, res) => {
   logger.info("Iniciando criação de kit");
-  let { name, year, description, archiveZip } = req.body;
+  let { name, year, description, archive } = req.body;
 
   await db
     .collection("kits")
-    .add({ name, year, description, archiveZip })
+    .add({ name, year, description, archive })
     .then((insertResponse) => {
       let msg = `Kit criado com id ${insertResponse.id}`;
       logger.info(msg);
@@ -79,14 +79,14 @@ app.post("/", async (req, res) => {
 
 app.put("/:id", async (req, res) => {
   let id = req.params.id;
-  let { name, year, description, archiveZip } = req.body;
+  let { name, year, description, archive } = req.body;
 
   logger.info(`Iniciando atualização do kit ${id}`);
 
   await db
     .collection("kits")
     .doc(id)
-    .set({ name, year, description, archiveZip })
+    .set({ name, year, description, archive })
     .then(() => {
       let msg = `Kit de id ${id} atualizado com sucesso!`;
       logger.info(msg);
