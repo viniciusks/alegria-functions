@@ -9,9 +9,12 @@ admin.initializeApp({
 const usersApi = require("./apis/users");
 const albumsApi = require("./apis/albums");
 const coursesApi = require("./apis/courses");
+const kitsApi = require("./apis/kits");
 
 module.exports = {
   ...usersApi,
   ...albumsApi,
   ...coursesApi,
+  ...kitsApi,
 };
+
