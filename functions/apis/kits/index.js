@@ -130,4 +130,4 @@ app.delete("/:id", async (req, res) => {
     });
 });
 
-exports.courses = functions.https.onRequest(app);
+exports.kits = functions.https.onRequest(app);
