@@ -21,11 +21,11 @@ app.get("/", async (req, res) => {
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
-        let course = {
+        let kit = {
           id: doc.id,
-          course: doc.data(),
+          kit: doc.data(),
         };
-        kits.push(course);
+        kits.push(kit);
       });
     });
 
